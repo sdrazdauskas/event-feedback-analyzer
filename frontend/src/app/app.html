@@ -248,7 +248,7 @@
     <section *ngIf="selectedEvent">
       <h2>Submit Feedback for {{ selectedEvent.title }}</h2>
       <textarea [(ngModel)]="feedbackText" placeholder="Your feedback..."></textarea>
-      <button (click)="submitFeedback()">Submit Feedback</button>
+      <button (click)="submitFeedback()" [disabled]="submittingFeedback || !feedbackText">Submit Feedback</button>
       <button (click)="getSummary()">Show Sentiment Summary</button>
     </section>
 
@@ -271,11 +271,3 @@
     <div class="message" *ngIf="message">{{ message }}</div>
   </div>
 </main>
-
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->

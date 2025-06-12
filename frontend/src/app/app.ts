@@ -18,6 +18,7 @@ export class AppComponent {
   newEvent = { title: '', description: '' };
   feedbackText = '';
   message = '';
+  submittingFeedback = false;
 
   constructor(private api: ApiService) {
     this.loadEvents();
@@ -44,9 +45,14 @@ export class AppComponent {
 
   submitFeedback() {
     if (!this.selectedEvent || !this.feedbackText) return;
+    this.submittingFeedback = true;
     this.api.submitFeedback(this.selectedEvent.id, this.feedbackText).subscribe(() => {
       this.message = 'Feedback submitted!';
       this.feedbackText = '';
+      this.submittingFeedback = false;
+    }, () => {
+      this.message = 'Error submitting feedback.';
+      this.submittingFeedback = false;
     });
   }
 
