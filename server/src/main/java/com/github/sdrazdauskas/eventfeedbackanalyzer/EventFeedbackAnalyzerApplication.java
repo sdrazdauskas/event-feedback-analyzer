@@ -9,5 +9,4 @@ public class EventFeedbackAnalyzerApplication {
     public static void main(String[] args) {
         SpringApplication.run(EventFeedbackAnalyzerApplication.class, args);
     }
-
 }

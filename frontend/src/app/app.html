@@ -257,12 +257,7 @@
       <ul>
         <li *ngFor="let key of summary | keyvalue">
           <span>
-            <ng-container *ngFor="let i of [0,1,2,3,4]">
-              <span [ngClass]="{'filled-star': i < +key.key, 'empty-star': i >= +key.key}">
-                {{ i < +key.key ? '★' : '☆' }}
-              </span>
-            </ng-container>
-            ({{ key.key }} stars): {{ key.value }}
+            {{ key.key }}: {{ key.value }}
           </span>
         </li>
       </ul>
