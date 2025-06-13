@@ -224,7 +224,7 @@
       <h2>Create Event</h2>
       <input [(ngModel)]="newEvent.title" placeholder="Title" />
       <input [(ngModel)]="newEvent.description" placeholder="Description" />
-      <button (click)="createEvent()">Create</button>
+      <button (click)="createEvent()" [disabled]="submittingEvent || !newEvent.title || !newEvent.description">Create</button>
     </section>
 
     <section>

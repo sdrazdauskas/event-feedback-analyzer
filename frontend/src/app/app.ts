@@ -18,6 +18,7 @@ export class AppComponent {
   newEvent = { title: '', description: '' };
   feedbackText = '';
   message = '';
+  submittingEvent = false;
   submittingFeedback = false;
   showSummary = false;
   showBars = false;
@@ -32,10 +33,15 @@ export class AppComponent {
 
   createEvent() {
     if (!this.newEvent.title || !this.newEvent.description) return;
+    this.submittingEvent = true;
     this.api.createEvent(this.newEvent.title, this.newEvent.description).subscribe(e => {
       this.events.push(e);
       this.newEvent = { title: '', description: '' };
       this.message = 'Event created!';
+      this.submittingEvent = false;
+    }, () => {
+      this.message = 'Error creating event.';
+      this.submittingEvent = false;
     });
   }
 
