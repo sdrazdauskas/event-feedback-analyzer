@@ -28,7 +28,17 @@ export class AppComponent {
   }
 
   loadEvents() {
-    this.api.getEvents().subscribe(events => this.events = events);
+    this.api.getEvents().subscribe({
+      next: events => this.events = events,
+      error: err => {
+        if (err.status === 0) {
+          this.message = 'Cannot connect to the server. Please check your network or try again later.';
+        } else {
+          this.message = 'Could not load events. Please try again later.';
+        }
+        this.events = [];
+      }
+    });
   }
 
   createEvent() {
@@ -87,7 +97,17 @@ export class AppComponent {
 
   getSummary() {
     if (!this.selectedEvent) return;
-    this.api.getSummary(this.selectedEvent.id).subscribe(summary => this.summary = summary);
+    this.api.getSummary(this.selectedEvent.id).subscribe({
+      next: summary => this.summary = summary,
+      error: err => {
+        if (err.status === 0) {
+          this.message = 'Cannot connect to the server. Please check your network or try again later.';
+        } else {
+          this.message = 'Could not load summary. Please try again later.';
+        }
+        this.summary = null;
+      }
+    });
   }
 
   getPositivePercentage(): number {
