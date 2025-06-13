@@ -1,12 +1,3 @@
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
-<!-- * * * * * * * to get started with your project! * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-
 <style>
   :host {
     --bright-blue: oklch(51.01% 0.274 263.83);
@@ -249,20 +240,64 @@
       <h2>Submit Feedback for {{ selectedEvent.title }}</h2>
       <textarea [(ngModel)]="feedbackText" placeholder="Your feedback..."></textarea>
       <button (click)="submitFeedback()" [disabled]="submittingFeedback || !feedbackText">Submit Feedback</button>
-      <button (click)="getSummary()">Show Sentiment Summary</button>
+      <button (click)="getSummary(); showSummary = !showSummary">
+        {{ showSummary ? 'Hide' : 'Show' }} Feedback Summary
+      </button>
     </section>
 
-    <section *ngIf="summary">
-      <h2>Feedback Star Summary</h2>
-      <ul>
-        <li *ngFor="let key of summary | keyvalue">
-          <span>
-            {{ key.key }}: {{ key.value }}
-          </span>
-        </li>
-      </ul>
-    </section>
+    <section *ngIf="summary && showSummary">
+      <h2>Feedback Summary</h2>
+      <!-- Always visible scored sentiment bar -->
+      <div style="background: #eee; border-radius: 8px; height: 24px; width: 100%; overflow: hidden;">
+        <div
+          [style.width.%]="getSentimentPercentage()"
+          style="background: linear-gradient(90deg, #51a7f9, #a259f7); height: 100%; transition: width 0.5s;">
+        </div>
+      </div>
+      <div style="text-align: right; font-size: 0.9em; color: #333; margin-top: 0.2em;">
+        Feedback Positivity: {{ getSentimentPercentage() }}%
+      </div>
 
+      <!-- Hide/show detailed bars -->
+      <button (click)="showBars = !showBars" style="margin-bottom: 1rem;">
+        {{ showBars ? 'Hide' : 'Show' }} More Details
+      </button>
+      <div *ngIf="showBars">
+        <div style="margin-bottom: 1rem;">
+          <div style="background: #eee; border-radius: 8px; height: 24px; width: 100%; overflow: hidden;">
+            <div
+              [style.width.%]="getPositivePercentage()"
+              style="background: linear-gradient(90deg, #51a7f9, #a259f7); height: 100%; transition: width 0.5s;">
+            </div>
+          </div>
+          <div style="text-align: right; font-size: 0.9em; color: #333; margin-top: 0.2em;">
+            Positive: {{ getPositivePercentage() }}% ({{ summary['Positive'] || 0 }})
+          </div>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <div style="background: #eee; border-radius: 8px; height: 24px; width: 100%; overflow: hidden;">
+            <div
+              [style.width.%]="getNeutralPercentage()"
+              style="background: linear-gradient(90deg, #51a7f9, #a259f7); height: 100%; transition: width 0.5s;">
+            </div>
+          </div>
+          <div style="text-align: right; font-size: 0.9em; color: #333; margin-top: 0.2em;">
+            Neutral: {{ getNeutralPercentage() }}% ({{ summary['Neutral'] || 0 }})
+          </div>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <div style="background: #eee; border-radius: 8px; height: 24px; width: 100%; overflow: hidden;">
+            <div
+              [style.width.%]="getNegativePercentage()"
+              style="background: linear-gradient(90deg, #51a7f9, #a259f7); height: 100%; transition: width 0.5s;">
+            </div>
+          </div>
+          <div style="text-align: right; font-size: 0.9em; color: #333; margin-top: 0.2em;">
+            Negative: {{ getNegativePercentage() }}% ({{ summary['Negative'] || 0 }})
+          </div>
+        </div>
+      </div>
+    </section>
     <div class="message" *ngIf="message">{{ message }}</div>
   </div>
 </main>

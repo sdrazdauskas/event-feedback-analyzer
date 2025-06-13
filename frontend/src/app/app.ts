@@ -19,6 +19,8 @@ export class AppComponent {
   feedbackText = '';
   message = '';
   submittingFeedback = false;
+  showSummary = false;
+  showBars = false;
 
   constructor(private api: ApiService) {
     this.loadEvents();
@@ -50,6 +52,7 @@ export class AppComponent {
       this.message = 'Feedback submitted!';
       this.feedbackText = '';
       this.submittingFeedback = false;
+      this.getSummary();
     }, () => {
       this.message = 'Error submitting feedback.';
       this.submittingFeedback = false;
@@ -59,5 +62,40 @@ export class AppComponent {
   getSummary() {
     if (!this.selectedEvent) return;
     this.api.getSummary(this.selectedEvent.id).subscribe(summary => this.summary = summary);
+  }
+
+  getPositivePercentage(): number {
+    if (!this.summary) return 0;
+    const total = (this.summary['Positive'] || 0) + (this.summary['Neutral'] || 0) + (this.summary['Negative'] || 0);
+    if (total === 0) return 0;
+    return Math.round((this.summary['Positive'] || 0) / total * 100);
+  }
+
+  getNeutralPercentage(): number {
+    if (!this.summary) return 0;
+    const total = (this.summary['Positive'] || 0) + (this.summary['Neutral'] || 0) + (this.summary['Negative'] || 0);
+    if (total === 0) return 0;
+    return Math.round((this.summary['Neutral'] || 0) / total * 100);
+  }
+
+  getNegativePercentage(): number {
+    if (!this.summary) return 0;
+    const total = (this.summary['Positive'] || 0) + (this.summary['Neutral'] || 0) + (this.summary['Negative'] || 0);
+    if (total === 0) return 0;
+    return Math.round((this.summary['Negative'] || 0) / total * 100);
+  }
+
+  getAverageSentimentScore(): number {
+    if (!this.summary) return 0;
+    const positive = this.summary['Positive'] || 0;
+    const neutral = this.summary['Neutral'] || 0;
+    const negative = this.summary['Negative'] || 0;
+    const total = positive + neutral + negative;
+    if (total === 0) return 0;
+    return ((positive * 1) + (neutral * 0.5) + (negative * 0)) / total;
+  }
+
+  getSentimentPercentage(): number {
+    return Math.round(this.getAverageSentimentScore() * 100);
   }
 }
