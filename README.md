@@ -22,6 +22,9 @@ The deployed backend API is available at:
 
 **Note:** Written data is not permanent and will reset whenever the service is updated, restarted, or goes idle (Cloud Run uses an in-memory H2 database).
 
+The deployed Angular frontend is available at:  
+[https://event-feedback-analyzer-angular-387154959779.europe-central2.run.app/](https://event-feedback-analyzer-angular-387154959779.europe-central2.run.app/)
+
 ---
 
 ## Prerequisites
