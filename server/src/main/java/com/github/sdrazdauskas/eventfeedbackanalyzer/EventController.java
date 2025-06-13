@@ -27,6 +27,7 @@ public class EventController {
     private final EventRepository eventRepository;
     private final HuggingFaceService huggingFaceService;
     private final FeedbackService feedbackService;
+    private static final int MAX_EVENTS = 1000; // Limit for total events in memory
 
     public EventController(EventRepository eventRepository, HuggingFaceService huggingFaceService) {
         this.eventRepository = eventRepository;
@@ -35,11 +36,15 @@ public class EventController {
     }
 
     @PostMapping
-    public Event createEvent(@RequestBody Map<String, String> body) {
+    public ResponseEntity<?> createEvent(@RequestBody Map<String, String> body) {
+        long eventCount = eventRepository.count();
+        if (eventCount >= MAX_EVENTS) {
+            return ResponseEntity.status(429).body("Event limit reached. Please delete old events before creating new ones.");
+        }
         String title = body.get("title");
         String description = body.get("description");
         Event event = new Event(title, description);
-        return eventRepository.save(event);
+        return ResponseEntity.ok(eventRepository.save(event));
     }
 
     @GetMapping

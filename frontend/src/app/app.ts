@@ -34,14 +34,24 @@ export class AppComponent {
   createEvent() {
     if (!this.newEvent.title || !this.newEvent.description) return;
     this.submittingEvent = true;
-    this.api.createEvent(this.newEvent.title, this.newEvent.description).subscribe(e => {
-      this.events.push(e);
-      this.newEvent = { title: '', description: '' };
-      this.message = 'Event created!';
-      this.submittingEvent = false;
-    }, () => {
-      this.message = 'Error creating event.';
-      this.submittingEvent = false;
+    this.api.createEvent(this.newEvent.title, this.newEvent.description).subscribe({
+      next: (response) => {
+        // If status is 200, event created
+        if (response.status === 200) {
+          this.events.push(response.body!);
+          this.newEvent = { title: '', description: '' };
+          this.message = 'Event created!';
+        }
+        this.submittingEvent = false;
+      },
+      error: (err) => {
+        if (err.status === 429) {
+          this.message = 'Event limit reached. Please delete old events before creating new ones.';
+        } else {
+          this.message = 'Error creating event.';
+        }
+        this.submittingEvent = false;
+      }
     });
   }
 

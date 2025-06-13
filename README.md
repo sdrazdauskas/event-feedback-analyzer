@@ -98,7 +98,8 @@ The deployed Angular frontend is available at:
    ng serve
    ```
    - The app will be available at [http://localhost:4200](http://localhost:4200)
-   - Ensure the API URL in `frontend/src/app/api.service.ts` points to your backend (local or deployed Cloud Run URL).
+   - Ensure the API URL in `frontend/src/app/api.service.ts` is set correctly. For local development, use your local backend URL (e.g., `http://localhost:8080`). For production or Cloud Run, use your deployed backend URL.
+   - You can configure the API URL using Angular environment files (`frontend/src/environments/environment.ts` and `environment.prod.ts`).
 
 3. **Build for production**
    ```sh

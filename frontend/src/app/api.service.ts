@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Event, Feedback, SentimentSummary } from './models';
 import { environment } from '../environments/environment';
@@ -14,8 +14,8 @@ export class ApiService {
     return this.http.get<Event[]>(this.apiUrl);
   }
 
-  createEvent(title: string, description: string): Observable<Event> {
-    return this.http.post<Event>(this.apiUrl, { title, description });
+  createEvent(title: string, description: string): Observable<HttpResponse<Event>> {
+    return this.http.post<Event>(this.apiUrl, { title, description }, { observe: 'response' });
   }
 
   submitFeedback(eventId: string, text: string): Observable<any> {
