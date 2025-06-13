@@ -28,6 +28,7 @@ public class EventController {
     private final HuggingFaceService huggingFaceService;
     private final FeedbackService feedbackService;
     private static final int MAX_EVENTS = 1000; // Limit for total events in memory
+    private static final int MAX_FEEDBACK = 100; // Limit for feedback amount for one event
 
     public EventController(EventRepository eventRepository, HuggingFaceService huggingFaceService) {
         this.eventRepository = eventRepository;
@@ -60,6 +61,9 @@ public class EventController {
             return ResponseEntity.notFound().build();
         }
         Event event = eventOpt.get();
+        if (event.getFeedbackList().size() >= MAX_FEEDBACK) {
+            return ResponseEntity.status(429).body("Feedback limit reached for this event. Please delete old feedback before adding new ones.");
+        }
         event.addFeedback(feedbackService.createFeedback(text));
         eventRepository.save(event);
         return ResponseEntity.ok().build();

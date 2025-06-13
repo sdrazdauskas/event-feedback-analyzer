@@ -46,7 +46,7 @@ export class AppComponent {
       },
       error: (err) => {
         if (err.status === 429) {
-          this.message = 'Event limit reached. Please delete old events before creating new ones.';
+          this.message = 'Event limit reached. Please try again later.';
         } else {
           this.message = 'Error creating event.';
         }
@@ -64,14 +64,24 @@ export class AppComponent {
   submitFeedback() {
     if (!this.selectedEvent || !this.feedbackText) return;
     this.submittingFeedback = true;
-    this.api.submitFeedback(this.selectedEvent.id, this.feedbackText).subscribe(() => {
-      this.message = 'Feedback submitted!';
-      this.feedbackText = '';
-      this.submittingFeedback = false;
-      this.getSummary();
-    }, () => {
-      this.message = 'Error submitting feedback.';
-      this.submittingFeedback = false;
+    this.api.submitFeedback(this.selectedEvent.id, this.feedbackText).subscribe({
+      next: (response) => {
+        if (response.status === 200) {
+          this.message = 'Feedback submitted successfully!';
+          this.feedbackText = '';
+          
+          this.getSummary();
+        }
+        this.submittingFeedback = false;
+      },
+      error: (err) => {
+        if (err.status === 429) {
+          this.message = 'Feedback limit reached for this event. Please try again later.';
+        } else {
+          this.message = 'Error submitting feedback.';
+        }
+        this.submittingFeedback = false;
+      }
     });
   }
 

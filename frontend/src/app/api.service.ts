@@ -19,7 +19,7 @@ export class ApiService {
   }
 
   submitFeedback(eventId: string, text: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${eventId}/feedback`, { text });
+    return this.http.post(`${this.apiUrl}/${eventId}/feedback`, { text }, { observe: 'response' });
   }
 
   getSummary(eventId: string): Observable<SentimentSummary> {
