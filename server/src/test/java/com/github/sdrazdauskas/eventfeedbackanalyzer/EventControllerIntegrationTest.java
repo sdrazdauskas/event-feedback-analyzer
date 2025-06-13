@@ -12,6 +12,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import static org.mockito.Mockito.when;
+import org.springframework.http.ResponseEntity;
+import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -20,8 +25,15 @@ public class EventControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
+    private HuggingFaceService huggingFaceService;
+
     @Test
     void createAndGetEvent() throws Exception {
+        // Mock sentiment API
+        when(huggingFaceService.sendHttpRequest(org.mockito.ArgumentMatchers.anyString()))
+            .thenReturn(ResponseEntity.ok(List.of(List.of(Map.of("label", "5 stars", "score", 0.99)))));
+
         // Create event
         mockMvc.perform(post("/events")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -37,6 +49,10 @@ public class EventControllerIntegrationTest {
 
     @Test
     void addFeedbackAndGetSummary() throws Exception {
+        // Mock sentiment API
+        when(huggingFaceService.sendHttpRequest(org.mockito.ArgumentMatchers.anyString()))
+            .thenReturn(ResponseEntity.ok(List.of(List.of(Map.of("label", "5 stars", "score", 0.99)))));
+
         // Create event
         String eventJson = mockMvc.perform(post("/events")
                 .contentType(MediaType.APPLICATION_JSON)

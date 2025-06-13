@@ -29,7 +29,7 @@ public class Feedback {
         // JPA requires a no-args constructor
         this.text = null;
         this.timestamp = null;
-        this.sentiment = Sentiment.Neutral; // Default sentiment
+        this.sentiment = Sentiment.Neutral; // Fallback to Neutral sentiment
     }
 
     public Feedback(String text, Sentiment sentiment) {

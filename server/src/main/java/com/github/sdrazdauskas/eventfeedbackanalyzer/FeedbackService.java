@@ -52,6 +52,7 @@ public class FeedbackService {
                 }
             }
         }
-        return Sentiment.Neutral; // Default to Neutral if no valid response
+        System.out.println("[DEBUG] Received non valid response from Hugging Face API: " + response.getBody());
+        return Sentiment.Neutral; // Default to Neutral if there was no valid response
     }
 }
