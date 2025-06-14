@@ -78,6 +78,8 @@ export class AppComponent {
     this.selectedEvent = event;
     this.summary = null;
     this.feedbackText = '';
+    this.showSummary = false;
+    this.showBars = false;
   }
 
   submitFeedback() {
