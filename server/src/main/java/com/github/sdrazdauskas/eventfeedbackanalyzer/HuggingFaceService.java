@@ -36,16 +36,20 @@ public class HuggingFaceService {
 
     
     public ResponseEntity<Object> postToHuggingFace(String text) {
+        return postToHuggingFace(text, getUrl(), getKey());
+    }
+
+    public ResponseEntity<Object> postToHuggingFace(String text, String apiUrl, String apiKey) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-            headers.set("Authorization", "Bearer " + getKey());
+            headers.set("Authorization", "Bearer " + apiKey);
             String body = "{\"inputs\": " + toJsonString(text) + "}";
             HttpEntity<String> entity = new HttpEntity<>(body, headers);
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<Object> response = restTemplate.exchange(
-                getUrl(), HttpMethod.POST, entity, Object.class
+                apiUrl, HttpMethod.POST, entity, Object.class
             );
             return response;
         }
