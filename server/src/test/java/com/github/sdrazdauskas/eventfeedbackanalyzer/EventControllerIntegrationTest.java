@@ -12,11 +12,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import static org.mockito.Mockito.when;
+import org.mockito.Mockito;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.Map;
+
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -25,13 +29,21 @@ public class EventControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @Autowired
     private HuggingFaceService huggingFaceService;
+
+    @TestConfiguration
+    static class MockConfig {
+        @Bean
+        public HuggingFaceService huggingFaceService() {
+            return Mockito.mock(HuggingFaceService.class);
+        }
+    }
 
     @Test
     void createAndGetEvent() throws Exception {
         // Mock sentiment API
-        when(huggingFaceService.sendHttpRequest(org.mockito.ArgumentMatchers.anyString()))
+        when(huggingFaceService.sendHttpRequest(anyString()))
             .thenReturn(ResponseEntity.ok(List.of(List.of(Map.of("label", "5 stars", "score", 0.99)))));
 
         // Create event
@@ -50,7 +62,7 @@ public class EventControllerIntegrationTest {
     @Test
     void addFeedbackAndGetSummary() throws Exception {
         // Mock sentiment API
-        when(huggingFaceService.sendHttpRequest(org.mockito.ArgumentMatchers.anyString()))
+        when(huggingFaceService.sendHttpRequest(anyString()))
             .thenReturn(ResponseEntity.ok(List.of(List.of(Map.of("label", "5 stars", "score", 0.99)))));
 
         // Create event
