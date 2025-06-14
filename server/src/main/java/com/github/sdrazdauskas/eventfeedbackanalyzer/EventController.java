@@ -57,6 +57,11 @@ public class EventController {
             return ResponseEntity.badRequest().body("Description is required and must be at most " + MAX_DESCRIPTION_LENGTH + " characters.");
         }
 
+        // Check for duplicate title
+        if (eventRepository.findByTitle(title).isPresent()) {
+            return ResponseEntity.badRequest().body("An event with this title already exists.");
+        }
+
         Event event = new Event(title, description);
         return ResponseEntity.ok(eventRepository.save(event));
     }
