@@ -40,7 +40,7 @@ public class EventControllerValidationTest {
 
     @Test
     void cannotCreateEventWithDuplicateTitle() throws Exception {
-        when(huggingFaceService.sendHttpRequest(anyString()))
+        when(huggingFaceService.postToHuggingFace(anyString()))
             .thenReturn(ResponseEntity.ok(List.of(List.of(Map.of("label", "5 stars", "score", 0.99)))));
 
         mockMvc.perform(post("/events")

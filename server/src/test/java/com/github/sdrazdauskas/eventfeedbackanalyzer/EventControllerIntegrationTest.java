@@ -43,7 +43,7 @@ public class EventControllerIntegrationTest {
     @Test
     void createAndGetEvent() throws Exception {
         // Mock sentiment API
-        when(huggingFaceService.sendHttpRequest(anyString()))
+        when(huggingFaceService.postToHuggingFace(anyString()))
             .thenReturn(ResponseEntity.ok(List.of(List.of(Map.of("label", "5 stars", "score", 0.99)))));
 
         // Create event
@@ -62,7 +62,7 @@ public class EventControllerIntegrationTest {
     @Test
     void addFeedbackAndGetSummary() throws Exception {
         // Mock sentiment API
-        when(huggingFaceService.sendHttpRequest(anyString()))
+        when(huggingFaceService.postToHuggingFace(anyString()))
             .thenReturn(ResponseEntity.ok(List.of(List.of(Map.of("label", "5 stars", "score", 0.99)))));
 
         // Create event

@@ -23,7 +23,7 @@ public class FeedbackService {
     }
 
     private Sentiment analyzeSentiment(String text) {
-        ResponseEntity<Object> response = huggingFaceService.sendHttpRequest(text);
+        ResponseEntity<Object> response = huggingFaceService.postToHuggingFace(text);
         if (response.getBody() instanceof List<?> list && !list.isEmpty()) {
             Object first = list.get(0);
             if (first instanceof List<?> resultList && !resultList.isEmpty()) {

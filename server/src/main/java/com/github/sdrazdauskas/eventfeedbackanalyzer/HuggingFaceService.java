@@ -35,7 +35,7 @@ public class HuggingFaceService {
     }
 
     
-    public ResponseEntity<Object> sendHttpRequest(String text) {
+    public ResponseEntity<Object> postToHuggingFace(String text) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -50,7 +50,7 @@ public class HuggingFaceService {
             return response;
         }
         catch (Exception e) {
-            System.out.println("[DEBUG] Exception in analyzeSentiment: " + e.getMessage());
+            System.out.println("[DEBUG] Exception in postToHuggingFace: " + e.getMessage());
         }
         return null;
     }
