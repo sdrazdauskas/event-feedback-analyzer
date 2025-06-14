@@ -80,6 +80,6 @@
         </div>
       </div>
     </section>
-    <div class="message" *ngIf="message">{{ message }}</div>
+    <div *ngIf="message" class="message" [ngClass]="{'message-success': messageType === 'success', 'message-error': messageType === 'error'}">{{ message }}</div>
   </div>
 </main>

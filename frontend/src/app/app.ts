@@ -4,6 +4,8 @@ import { Event, SentimentSummary } from './models';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+const DEFAULT_MESSAGE_TIMEOUT = 3000;
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -18,6 +20,8 @@ export class AppComponent {
   newEvent = { title: '', description: '' };
   feedbackText = '';
   message = '';
+  messageType: 'success' | 'error' = 'success';
+  private messageTimeout: any;
   submittingEvent = false;
   submittingFeedback = false;
   showSummary = false;
@@ -32,9 +36,9 @@ export class AppComponent {
       next: events => this.events = events,
       error: err => {
         if (err.status === 0) {
-          this.message = 'Cannot connect to the server. Please check your network or try again later.';
+          this.showMessage('Cannot connect to the server. Please check your network or try again later.', 0, 'error');
         } else {
-          this.message = 'Could not load events. Please try again later.';
+          this.showMessage('Could not load events. Please try again later.', DEFAULT_MESSAGE_TIMEOUT, 'error');
         }
         this.events = [];
       }
@@ -50,20 +54,20 @@ export class AppComponent {
         if (response.status === 200) {
           this.events.push(response.body!);
           this.newEvent = { title: '', description: '' };
-          this.message = 'Event created!';
+          this.showMessage('Event created!', DEFAULT_MESSAGE_TIMEOUT, 'success');
         }
         this.submittingEvent = false;
       },
       error: (err) => {
         switch (err.status) {
           case 400:
-            this.message = err.error || 'Invalid event data. Please check your input.';
+            this.showMessage(err.error || 'Invalid event data. Please check your input.', DEFAULT_MESSAGE_TIMEOUT, 'error');
             break;
           case 429:
-            this.message = 'Event limit reached. Please try again later.';
+            this.showMessage('Event limit reached. Please try again later.', DEFAULT_MESSAGE_TIMEOUT, 'error');
             break;
           default:
-            this.message = 'Error creating event.';
+            this.showMessage('Error creating event.', DEFAULT_MESSAGE_TIMEOUT, 'error');
         }
         this.submittingEvent = false;
       }
@@ -82,7 +86,7 @@ export class AppComponent {
     this.api.submitFeedback(this.selectedEvent.id, this.feedbackText).subscribe({
       next: (response) => {
         if (response.status === 200) {
-          this.message = 'Feedback submitted successfully!';
+          this.showMessage('Feedback submitted successfully!', DEFAULT_MESSAGE_TIMEOUT, 'success');
           this.feedbackText = '';
           
           this.getSummary();
@@ -92,13 +96,13 @@ export class AppComponent {
       error: (err) => {
         switch (err.status) {
           case 400:
-            this.message = err.error || 'Invalid feedback data. Please check your input.';
+            this.showMessage(err.error || 'Invalid feedback data. Please check your input.', DEFAULT_MESSAGE_TIMEOUT, 'error');
             break;
           case 429:
-            this.message = 'Feedback limit reached for this event. Please try again later.';
+            this.showMessage('Feedback limit reached for this event. Please try again later.', DEFAULT_MESSAGE_TIMEOUT, 'error');
             break;
           default:
-            this.message = 'Error submitting feedback.';
+            this.showMessage('Error submitting feedback.', DEFAULT_MESSAGE_TIMEOUT, 'error');
         }
         this.submittingFeedback = false;
       }
@@ -111,9 +115,9 @@ export class AppComponent {
       next: summary => this.summary = summary,
       error: err => {
         if (err.status === 0) {
-          this.message = 'Cannot connect to the server. Please check your network or try again later.';
+          this.showMessage('Cannot connect to the server. Please check your network or try again later.', 0, 'error');
         } else {
-          this.message = 'Could not load summary. Please try again later.';
+          this.showMessage('Could not load summary. Please try again later.', DEFAULT_MESSAGE_TIMEOUT, 'error');
         }
         this.summary = null;
       }
@@ -153,5 +157,18 @@ export class AppComponent {
 
   getSentimentPercentage(): number {
     return Math.round(this.getAverageSentimentScore() * 100);
+  }
+
+  showMessage(msg: string, duration: number = DEFAULT_MESSAGE_TIMEOUT, type: 'success' | 'error' = 'success') {
+    this.message = msg;
+    this.messageType = type;
+    if (this.messageTimeout) {
+      clearTimeout(this.messageTimeout);
+    }
+    if (duration && duration > 0) {
+      this.messageTimeout = setTimeout(() => {
+        this.message = '';
+      }, duration);
+    }
   }
 }
