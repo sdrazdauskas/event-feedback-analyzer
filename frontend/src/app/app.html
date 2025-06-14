@@ -30,52 +30,54 @@
     <section *ngIf="summary && showSummary">
       <h2>Feedback Summary</h2>
       <!-- Always visible scored sentiment bar -->
-      <div style="background: #eee; border-radius: 8px; height: 24px; width: 100%; overflow: hidden;">
+      <div class="bar-bg">
         <div
           [style.width.%]="getSentimentPercentage()"
-          style="background: linear-gradient(90deg, #51a7f9, #a259f7); height: 100%; transition: width 0.5s;">
+          class="bar-fill">
         </div>
       </div>
-      <div style="text-align: right; font-size: 0.9em; color: #333; margin-top: 0.2em;">
+      <div class="bar-label-positivity">
         Feedback Positivity: {{ getSentimentPercentage() }}%
       </div>
-
       <!-- Hide/show detailed bars -->
       <button (click)="showBars = !showBars" style="margin-bottom: 1rem;">
         {{ showBars ? 'Hide' : 'Show' }} More Details
       </button>
       <div *ngIf="showBars">
         <div style="margin-bottom: 1rem;">
-          <div style="background: #eee; border-radius: 8px; height: 24px; width: 100%; overflow: hidden;">
+          <div class="bar-bg">
             <div
               [style.width.%]="getPositivePercentage()"
-              style="background: linear-gradient(90deg, #51a7f9, #a259f7); height: 100%; transition: width 0.5s;">
+              class="bar-fill">
             </div>
           </div>
-          <div style="text-align: right; font-size: 0.9em; color: #333; margin-top: 0.2em;">
+          <div class="bar-label">
             Positive: {{ getPositivePercentage() }}% ({{ summary['Positive'] || 0 }})
           </div>
         </div>
         <div style="margin-bottom: 1rem;">
-          <div style="background: #eee; border-radius: 8px; height: 24px; width: 100%; overflow: hidden;">
+          <div class="bar-bg">
             <div
               [style.width.%]="getNeutralPercentage()"
-              style="background: linear-gradient(90deg, #51a7f9, #a259f7); height: 100%; transition: width 0.5s;">
+              class="bar-fill">
             </div>
           </div>
-          <div style="text-align: right; font-size: 0.9em; color: #333; margin-top: 0.2em;">
+          <div class="bar-label">
             Neutral: {{ getNeutralPercentage() }}% ({{ summary['Neutral'] || 0 }})
           </div>
         </div>
         <div style="margin-bottom: 1rem;">
-          <div style="background: #eee; border-radius: 8px; height: 24px; width: 100%; overflow: hidden;">
+          <div class="bar-bg">
             <div
               [style.width.%]="getNegativePercentage()"
-              style="background: linear-gradient(90deg, #51a7f9, #a259f7); height: 100%; transition: width 0.5s;">
+              class="bar-fill">
             </div>
           </div>
-          <div style="text-align: right; font-size: 0.9em; color: #333; margin-top: 0.2em;">
+          <div class="bar-label">
             Negative: {{ getNegativePercentage() }}% ({{ summary['Negative'] || 0 }})
+          </div>
+          <div class="bar-label-total">
+            Total feedbacks: {{ (summary['Positive'] || 0) + (summary['Neutral'] || 0) + (summary['Negative'] || 0) }}
           </div>
         </div>
       </div>
