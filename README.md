@@ -1,6 +1,18 @@
 # Event Feedback Analyzer
 
-A full-stack event feedback analyzer with a Java Spring Boot backend and Angular frontend. The backend supports event creation, feedback submission, and AI-powered sentiment analysis using Hugging Face. The frontend allows users to create events, submit feedback, and view sentiment summaries.
+A full-stack event feedback analyzer with a Java Spring Boot backend and Angular frontend. 
+
+The backend supports event creation, feedback submission, and AI-powered sentiment analysis using Hugging Face. 
+
+The frontend allows users to create events, submit feedback, and view sentiment summaries.
+
+---
+
+## Project Structure
+```
+frontend/   # Angular app
+server/     # Spring Boot backend
+```
 
 ---
 
@@ -16,6 +28,8 @@ A full-stack event feedback analyzer with a Java Spring Boot backend and Angular
 - Environment-based configuration (via environment variables or properties)
 - Automated backend integration tests
 - H2 in-memory database
+
+---
 
 ## Live Demo / Deployed API
 
@@ -108,6 +122,17 @@ The deployed Angular frontend is available at:
    npm run build
    ```
 
+4. **Docker (optional)**
+   ```sh
+   cd frontend
+   docker build -t event-feedback-analyzer-frontend .
+   docker run -p 4200:80 \
+     -e API_URL=http://your-backend-url:8080 \
+     event-feedback-analyzer-frontend
+   ```
+   - The container will serve the Angular app on port 80 (mapped to 4200 on your host).
+   - Make sure to set the correct API URL in your environment or build config if needed.
+
 ---
 
 ## Usage
@@ -121,16 +146,53 @@ The deployed Angular frontend is available at:
 
 ---
 
-## Project Structure
-```
-frontend/   # Angular app
-server/     # Spring Boot backend
-```
+## API: Request Arguments & Responses
 
----
+### Create Event (POST /events)
+- Expects JSON body:
+  ```json
+  {
+    "title": "Event Title",      // string, required, unique, max 100 chars
+    "description": "Description" // string, required, max 500 chars
+  }
+  ```
+- Returns: the created event as JSON.
+
+### List Events (GET /events)
+- Returns: an array of event objects:
+  ```json
+  [
+    {
+      "id": "eventId",
+      "title": "Event Title",
+      "description": "Description",
+      "feedbackList": [ ... ]
+    },
+    ...
+  ]
+  ```
+
+### Submit Feedback (POST /events/{eventId}/feedback)
+- Expects JSON body:
+  ```json
+  {
+    "text": "Feedback text"      // string, required, max 500 chars
+  }
+  ```
+- Returns: HTTP 200 OK on success.
+
+### Get Feedback Summary (GET /events/{eventId}/summary)
+- Returns: a JSON object with sentiment counts:
+  ```json
+  {
+    "Positive": 3,
+    "Neutral": 1,
+    "Negative": 0
+  }
+  ```
 
 ## Environment Configuration
-- Backend config: via environment variables or `server/src/main/resources/application-dev.properties` (for local dev)
+- Backend config: via environment variables or `server/src/main/resources/application-dev.properties` (for local dev) and set the profile to dev.
 - Frontend config: (if needed, use Angular environment files)
 
 ---
