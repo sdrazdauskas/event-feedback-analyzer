@@ -55,10 +55,15 @@ export class AppComponent {
         this.submittingEvent = false;
       },
       error: (err) => {
-        if (err.status === 429) {
-          this.message = 'Event limit reached. Please try again later.';
-        } else {
-          this.message = 'Error creating event.';
+        switch (err.status) {
+          case 400:
+            this.message = err.error || 'Invalid event data. Please check your input.';
+            break;
+          case 429:
+            this.message = 'Event limit reached. Please try again later.';
+            break;
+          default:
+            this.message = 'Error creating event.';
         }
         this.submittingEvent = false;
       }
@@ -85,10 +90,15 @@ export class AppComponent {
         this.submittingFeedback = false;
       },
       error: (err) => {
-        if (err.status === 429) {
-          this.message = 'Feedback limit reached for this event. Please try again later.';
-        } else {
-          this.message = 'Error submitting feedback.';
+        switch (err.status) {
+          case 400:
+            this.message = err.error || 'Invalid feedback data. Please check your input.';
+            break;
+          case 429:
+            this.message = 'Feedback limit reached for this event. Please try again later.';
+            break;
+          default:
+            this.message = 'Error submitting feedback.';
         }
         this.submittingFeedback = false;
       }

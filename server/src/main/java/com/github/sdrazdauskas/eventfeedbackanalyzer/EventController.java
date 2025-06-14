@@ -24,11 +24,15 @@ import io.swagger.v3.oas.annotations.info.Info;
 @RestController
 @RequestMapping("/events")
 public class EventController {
+    private static final int MAX_EVENTS = 1000; // Limit for total events in memory
+    private static final int MAX_FEEDBACK = 100; // Limit for feedback amount for one event
+    private static final int MAX_TITLE_LENGTH = 100; // Limit for event's title length
+    private static final int MAX_DESCRIPTION_LENGTH = 500; // Limit for event's description length
+    private static final int MAX_FEEDBACK_LENGTH = 500; // Limit for event's feedback length
+
     private final EventRepository eventRepository;
     private final HuggingFaceService huggingFaceService;
     private final FeedbackService feedbackService;
-    private static final int MAX_EVENTS = 1000; // Limit for total events in memory
-    private static final int MAX_FEEDBACK = 100; // Limit for feedback amount for one event
 
     public EventController(EventRepository eventRepository, HuggingFaceService huggingFaceService) {
         this.eventRepository = eventRepository;
@@ -44,6 +48,15 @@ public class EventController {
         }
         String title = body.get("title");
         String description = body.get("description");
+
+        // Length validation
+        if (title == null || title.length() > MAX_TITLE_LENGTH) {
+            return ResponseEntity.badRequest().body("Title is required and must be at most " + MAX_TITLE_LENGTH + " characters.");
+        }
+        if (description == null || description.length() > MAX_DESCRIPTION_LENGTH) {
+            return ResponseEntity.badRequest().body("Description is required and must be at most " + MAX_DESCRIPTION_LENGTH + " characters.");
+        }
+
         Event event = new Event(title, description);
         return ResponseEntity.ok(eventRepository.save(event));
     }
@@ -63,6 +76,11 @@ public class EventController {
         Event event = eventOpt.get();
         if (event.getFeedbackList().size() >= MAX_FEEDBACK) {
             return ResponseEntity.status(429).body("Feedback limit reached for this event. Please delete old feedback before adding new ones.");
+        }
+
+        // Length validation
+        if (text == null || text.length() > MAX_FEEDBACK_LENGTH) {
+            return ResponseEntity.badRequest().body("Feedback is required and must be at most " + MAX_FEEDBACK_LENGTH + " characters.");
         }
         event.addFeedback(feedbackService.createFeedback(text));
         eventRepository.save(event);

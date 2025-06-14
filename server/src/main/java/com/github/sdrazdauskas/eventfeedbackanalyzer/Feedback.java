@@ -2,6 +2,7 @@ package com.github.sdrazdauskas.eventfeedbackanalyzer;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -20,6 +21,7 @@ public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    @Column(length = 500)
     private String text;
     private LocalDateTime timestamp;
     @Enumerated(EnumType.STRING)
