@@ -41,7 +41,6 @@ public class FeedbackService {
                     }
                 }
                 if (maxStars != 0) {
-                    System.out.println("[DEBUG] Chosen label: " + maxStars);
                     if (maxStars < 3) {
                         return Sentiment.Negative;
                     } else if (maxStars == 3) {

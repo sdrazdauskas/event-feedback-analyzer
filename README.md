@@ -5,15 +5,17 @@ A full-stack event feedback analyzer with a Java Spring Boot backend and Angular
 ---
 
 ## Features
-- Event creation and listing
-- Feedback submission for events
-- AI-powered sentiment analysis (negative, neutral, positive) using Hugging Face([nlptown/bert-base-multilingual-uncased-sentiment](https://huggingface.co/nlptown/bert-base-multilingual-uncased-sentiment))
+- Event creation and listing (with unique event titles and length validation)
+- Maximum of 1000 events stored at a time
+- Feedback submission for events (with length validation)
+- Maximum of 100 feedbacks per event
+- AI-powered sentiment analysis (negative, neutral, positive) using [Hugging Face](https://huggingface.co/nlptown/bert-base-multilingual-uncased-sentiment)
 - Sentiment summary visualization
 - OpenAPI/Swagger API documentation
 - Dockerized backend for easy deployment
 - Environment-based configuration (via environment variables or properties)
 - Automated backend integration tests
-- H2 in-memory database for all environments
+- H2 in-memory database
 
 ## Live Demo / Deployed API
 
@@ -110,6 +112,10 @@ The deployed Angular frontend is available at:
 
 ## Usage
 - Create events and submit feedback via the Angular UI.
+- **Event titles must be unique and have a maximum length of 100 characters.**
+- **Event descriptions and feedback have maximum length limits (500 characters).**
+- **A maximum of 1000 events can be stored at a time.**
+- **Each event can have up to 100 feedbacks.**
 - View sentiment summary for each event.
 - All feedback is analyzed using Hugging Face and stored in H2 in-memory database.
 
@@ -132,7 +138,7 @@ server/     # Spring Boot backend
 ## Troubleshooting
 - **CORS errors:** Ensure your backend has `@CrossOrigin` or a CORS config to allow requests from your frontend.
 - **Cloud Run startup issues:** Make sure that all required environment variables are set.
-- **Hugging Face errors:** Check that your API key and URL are correct and not rate-limited.
+- **Hugging Face errors:** Check that your API key and URL are correct and aren't rate-limited.
 - **Database:** H2 is in-memory and resets on restart. For persistence, switch to a production database.
 
 ---

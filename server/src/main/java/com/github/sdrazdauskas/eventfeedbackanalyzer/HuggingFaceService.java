@@ -42,13 +42,11 @@ public class HuggingFaceService {
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
             headers.set("Authorization", "Bearer " + getKey());
             String body = "{\"inputs\": " + toJsonString(text) + "}";
-            System.out.println("[DEBUG] Request body: " + body);
             HttpEntity<String> entity = new HttpEntity<>(body, headers);
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<Object> response = restTemplate.exchange(
                 getUrl(), HttpMethod.POST, entity, Object.class
             );
-            System.out.println("[DEBUG] Hugging Face response: " + response.getBody());
             return response;
         }
         catch (Exception e) {
