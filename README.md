@@ -26,7 +26,8 @@ server/     # Spring Boot backend
 - OpenAPI/Swagger API documentation
 - Dockerized backend for easy deployment
 - Environment-based configuration (via environment variables or properties)
-- Automated backend integration tests
+- Automated backend unit and integration tests (validation, event/feedback logic, API endpoints; mocks Hugging Face API for reliability)
+- Frontend unit and end-to-end (e2e) tests (see `frontend/README.md` for details)
 - H2 in-memory database
 
 ---
@@ -79,9 +80,14 @@ The deployed Angular frontend is available at:
    - Visit [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html) for interactive API docs.
 
 4. **Run Tests**
-   ```sh
-   mvn test
-   ```
+   - **Unit and Integration Tests:**
+     ```sh
+     mvn test
+     ```
+     - Runs all backend unit and integration tests, including validation (unique titles, length, required fields), event/feedback logic, and API endpoints.
+     - Tests are located in `server/src/test/java/com/github/sdrazdauskas/eventfeedbackanalyzer/`.
+     - Uses H2 in-memory database for isolated test runs.
+     - Mocks external Hugging Face API calls.
 
 5. **Docker (optional)**
    ```sh
