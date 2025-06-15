@@ -133,11 +133,10 @@ The deployed Angular frontend is available at:
    cd frontend
    docker build -t event-feedback-analyzer-frontend .
    docker run -p 4200:80 \
-     -e API_URL=http://your-backend-url:8080 \
      event-feedback-analyzer-frontend
    ```
    - The container will serve the Angular app on port 80 (mapped to 4200 on your host).
-   - Make sure to set the correct API URL in your environment or build config if needed.
+   - Make sure to set the correct API URL in your build config if needed.
 
 ---
 
