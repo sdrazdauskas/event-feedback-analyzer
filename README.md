@@ -72,8 +72,15 @@ The deployed Angular frontend is available at:
    ```
    Or use the Maven wrapper:
    ```sh
-   ./mvnw spring-boot:run   # On Linux/macOS
-   mvnw.cmd spring-boot:run # On Windows
+   # On Linux/macOS or PowerShell:
+   ./mvnw spring-boot:run
+   # To use the dev profile in PowerShell:
+   ./mvnw spring-boot:run "-Dspring-boot.run.profiles=dev"
+
+   # On Windows CMD:
+   mvnw.cmd spring-boot:run
+   # To use the dev profile in CMD:
+   mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=dev
    ```
 
 3. **API Documentation**
