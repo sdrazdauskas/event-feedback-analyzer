@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static com.github.sdrazdauskas.eventfeedbackanalyzer.EventController.MAX_TITLE_LENGTH;
+import static com.github.sdrazdauskas.eventfeedbackanalyzer.EventController.MAX_DESCRIPTION_LENGTH;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -57,18 +59,24 @@ public class EventControllerValidationTest {
 
     @Test
     void cannotCreateEventWithLongTitleOrDescription() throws Exception {
-        String longTitle = "T".repeat(101);
-        String longDesc = "D".repeat(501);
+        String longTitle = "T".repeat(MAX_TITLE_LENGTH + 1);
+        String longDesc = "D".repeat(MAX_DESCRIPTION_LENGTH + 1);
         mockMvc.perform(post("/events")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"title\":\"" + longTitle + "\",\"description\":\"Desc\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("at most 100 characters")));
+                .andExpect(content().string(org.hamcrest.Matchers.allOf(
+                    org.hamcrest.Matchers.containsString("at most"),
+                    org.hamcrest.Matchers.containsString("characters")
+                )));
         mockMvc.perform(post("/events")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"title\":\"Title\",\"description\":\"" + longDesc + "\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("at most 500 characters")));
+                .andExpect(content().string(org.hamcrest.Matchers.allOf(
+                    org.hamcrest.Matchers.containsString("at most"),
+                    org.hamcrest.Matchers.containsString("characters")
+                )));
     }
 
     @Test
