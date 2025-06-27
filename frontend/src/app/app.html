@@ -11,7 +11,10 @@
 
     <section>
       <h2>Events</h2>
-      <ul>
+      <div *ngIf="events.length === 0">
+        No events available. Please create one.
+      </div>
+      <ul *ngIf="events.length > 0">
         <li *ngFor="let event of events" (click)="selectEvent(event)" [class.selected]="selectedEvent?.id === event.id">
           <strong>{{ event.title }}</strong>: {{ event.description }}
         </li>
