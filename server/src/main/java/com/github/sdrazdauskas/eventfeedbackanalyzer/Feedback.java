@@ -10,12 +10,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-enum Sentiment {
-  Negative,
-  Neutral,
-  Positive
-}
-
 @Entity
 public class Feedback {
     @Id

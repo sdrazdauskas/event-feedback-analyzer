@@ -1,26 +1,21 @@
 package com.github.sdrazdauskas.eventfeedbackanalyzer;
 
-import java.util.List;
-import java.util.Map;
-
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.anyString;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static com.github.sdrazdauskas.eventfeedbackanalyzer.EventController.MAX_TITLE_LENGTH;
 import static com.github.sdrazdauskas.eventfeedbackanalyzer.EventController.MAX_DESCRIPTION_LENGTH;
+import static com.github.sdrazdauskas.eventfeedbackanalyzer.EventController.MAX_TITLE_LENGTH;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -30,21 +25,23 @@ public class EventControllerValidationTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private HuggingFaceService huggingFaceService;
+    private FeedbackService feedbackService;
 
     @TestConfiguration
     static class MockConfig {
         @Bean
-        public HuggingFaceService huggingFaceService() {
-            return Mockito.mock(HuggingFaceService.class);
+        public FeedbackService feedbackService() {
+            FeedbackService mock = Mockito.mock(FeedbackService.class);
+            Mockito.when(mock.createFeedback(anyString()))
+                .thenReturn(new Feedback("Test", Sentiment.Positive));
+            Mockito.when(mock.analyzeSentiment(anyString()))
+                .thenReturn(Sentiment.Positive);
+            return mock;
         }
     }
 
     @Test
     void cannotCreateEventWithDuplicateTitle() throws Exception {
-        when(huggingFaceService.postToHuggingFace(anyString()))
-            .thenReturn(ResponseEntity.ok(List.of(List.of(Map.of("label", "5 stars", "score", 0.99)))));
-
         mockMvc.perform(post("/events")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"title\":\"UniqueTitle\",\"description\":\"Desc\"}"))
