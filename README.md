@@ -27,7 +27,7 @@ server/     # Spring Boot backend
 - Dockerized backend for easy deployment
 - Environment-based configuration (via environment variables or properties)
 - Automated backend unit and integration tests (validation, event/feedback logic, API endpoints; mocks Hugging Face API for reliability)
-- Frontend unit and end-to-end (e2e) tests (see `frontend/README.md` for details)
+- Frontend unit tests
 - H2 in-memory database
 
 ---
@@ -63,7 +63,7 @@ The deployed Angular frontend is available at:
      huggingface.api.key=YOUR_HUGGINGFACE_API_KEY
      huggingface.api.sentiment.url=https://api-inference.huggingface.co/models/nlptown/bert-base-multilingual-uncased-sentiment
      ```
-   - The backend uses H2 in-memory database for all environments by default.
+   - The backend uses H2 in-memory database by default.
 
 2. **Run with Maven**
    ```sh
@@ -74,13 +74,13 @@ The deployed Angular frontend is available at:
    ```sh
    # On Linux/macOS or PowerShell:
    ./mvnw spring-boot:run
-   # To use the dev profile in PowerShell:
-   ./mvnw spring-boot:run "-Dspring-boot.run.profiles=dev"
 
    # On Windows CMD:
    mvnw.cmd spring-boot:run
-   # To use the dev profile in CMD:
-   mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=dev
+
+   # To use the dev profile (for application-dev.properties):
+   -Dspring-boot.run.profiles=dev 
+   "-Dspring-boot.run.profiles=dev" for PowerShell 
    ```
 
 3. **API Documentation**
