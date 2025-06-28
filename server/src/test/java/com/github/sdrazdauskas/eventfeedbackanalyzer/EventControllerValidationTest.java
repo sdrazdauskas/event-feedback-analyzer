@@ -62,18 +62,12 @@ public class EventControllerValidationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"title\":\"" + longTitle + "\",\"description\":\"Desc\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(org.hamcrest.Matchers.allOf(
-                    org.hamcrest.Matchers.containsString("at most"),
-                    org.hamcrest.Matchers.containsString("characters")
-                )));
+                .andExpect(content().string(EventController.TITLE_LENGTH_ERROR));
         mockMvc.perform(post("/events")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"title\":\"Title\",\"description\":\"" + longDesc + "\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(org.hamcrest.Matchers.allOf(
-                    org.hamcrest.Matchers.containsString("at most"),
-                    org.hamcrest.Matchers.containsString("characters")
-                )));
+                .andExpect(content().string(EventController.DESCRIPTION_LENGTH_ERROR));
     }
 
     @Test
@@ -82,11 +76,11 @@ public class EventControllerValidationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"description\":\"Desc\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Title is required")));
+                .andExpect(content().string(EventController.TITLE_LENGTH_ERROR));
         mockMvc.perform(post("/events")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"title\":\"Title\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Description is required")));
+                .andExpect(content().string(EventController.DESCRIPTION_LENGTH_ERROR));
     }
 }
